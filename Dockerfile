@@ -1,4 +1,4 @@
-FROM php:7.4-fpm
+FROM public-cn-beijing.cr.volces.com/public/base:php-7.4-fpm
 
 RUN apt-get -y update && apt-get -y install nginx
 
