@@ -1,6 +1,5 @@
 #!/bin/sh
 
-composer install --no-plugins --no-scripts
 # 后台启动
 php-fpm -D
 if [$? -ne 0]; then
