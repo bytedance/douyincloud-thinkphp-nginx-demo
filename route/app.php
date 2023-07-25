@@ -10,6 +10,7 @@
 // +----------------------------------------------------------------------
 use think\facade\Route;
 
-Route::get('/api/hello', 'index/sayHello');
-Route::post('/api/set_name', 'index/setName');
+Route::get('/api/get_open_id', 'index/getOpenID');
+Route::post('/api/text/antidirt', 'index/textAntidirt');
+
 

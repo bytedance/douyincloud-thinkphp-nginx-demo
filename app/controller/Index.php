@@ -17,46 +17,49 @@ limitations under the License.
 namespace app\controller;
 
 use app\BaseController;
-use app\model\Factory;
+use think\Http;
 use think\response\Json;
 
 class Index extends BaseController
 {
 
-    public function sayHello(): Json
+    public function getOpenID(): Json
     {
-        $target = $this->request->param('target');
+        $target = $this->request->header('X-Tt-OPENID');
         if(is_null($target)){
             return self::getResponse(-1, 'invalid params', '');
         }
-        $com = Factory::createComponent($target);
-        if(is_null($com)){
-            return self::getResponse(-1, 'invalid params', '');
-        }
-        $res = $com->getComponentName('name');
-        return self::getResponse(0, 'success', $res);
+        return self::getResponse(0, 'success', $target);
     }
 
-    public function setName(): Json
+    public function textAntidirt(): Json
     {
-        $target = $this->request->post('target');
-        $value = $this->request->post('name');
+        $content = $this->request->post('content');
 
-        if(is_null($target) || is_null($value)){
-            return self::getResponse(-1, 'invalid params', '');
-        }
+        $data = array('tasks' =>
+            array(array('content' => $content))
+        );
+        $data_string = json_encode( $data );
+        $url = 'http://developer.toutiao.com/api/v2/tags/text/antidirt';
 
-        $com = Factory::createComponent($target);
-        if(is_null($com)){
-            return self::getResponse(-1, 'invalid params', '');
-        }
+        $request = curl_init();
 
-        if(!$com->setComponentName('name', $value)){
-            return self::getResponse(-1, 'set component error', '');
-        }
+        curl_setopt($request, CURLOPT_URL,$url);
+        curl_setopt($request, CURLOPT_POST, 1);
+        curl_setopt($request, CURLOPT_POSTFIELDS, $data_string);
 
-        return self::getResponse('0','success', '');
+        curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($request, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($data_string))
+        );
+        $response = curl_exec($request);
+
+        curl_close ($request);
+        $res = json_decode($response, true);
+        return self::getResponse('0','success', $res);
     }
+
 
     public function getResponse($err_no, $err_msg, $data): Json
     {

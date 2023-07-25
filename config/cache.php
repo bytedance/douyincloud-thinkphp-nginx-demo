@@ -6,7 +6,7 @@
 
 return [
     // 默认缓存驱动
-    'default' => env('cache.driver', 'redis'),
+    'default' => env('cache.driver', 'file'),
 
     // 缓存连接方式配置
     'stores'  => [
@@ -23,15 +23,6 @@ return [
             'tag_prefix' => 'tag:',
             // 序列化机制 例如 ['serialize', 'unserialize']
             'serialize'  => [],
-        ],
-        // redis缓存
-        'redis'   =>  [
-            // 驱动方式
-            'type'   => 'redis',
-            // 服务器地址
-            'host'       => preg_split('/:/',getenv('REDIS_ADDRESS'))[0],
-            'port'       => preg_split('/:/',getenv('REDIS_ADDRESS'))[1],
-            'password'  =>  getenv('REDIS_PASSWORD'),
         ],
         // 更多的缓存连接
     ],
